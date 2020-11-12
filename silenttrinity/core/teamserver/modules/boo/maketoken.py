@@ -37,6 +37,6 @@ class STModule(Module):
             src = module_src.read()
             src = src.replace('USERNAME', str(self.options['Username']['Value']).upper())
             src = src.replace('DOMAIN', str(self.options['Domain']['Value']).upper())
-            src = src.replace('PASSWORD', str(self.options['Password']['Value']).upper())
+            src = src.replace('PASSWORD', str(self.options['Password']['Value']))
             src = src.replace('LOGON_TYPE', str(self.options['LogonType']['Value']).upper())
             return src

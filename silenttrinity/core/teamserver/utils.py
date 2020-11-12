@@ -35,3 +35,6 @@ def dotnet_deflate_and_encode(data):
     zlibbed_data = zlib.compress(data, 9)
     compressed_data = zlibbed_data[2:-4]
     return base64.b64encode(compressed_data).decode()
+
+def powershell_encode(data):
+    return base64.b64encode(data.encode('UTF-16LE')).decode()

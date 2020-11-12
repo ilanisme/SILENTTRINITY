@@ -228,13 +228,14 @@ class STShell:
                     )
 
                 elif self.current_context._remote is True:
+                    logging.info(f"{self.current_context.name}, {command[0]}, args : {args}")
                     response = await self.teamservers.send(
                             ctx=self.current_context.name,
                             cmd=command[0],
                             args=args
                         )
 
-                    logging.debug(f"response: {response}")
+                    logging.info(f"response: {response.result}")
 
                     if response.status == 'success' and response.result:
                         if hasattr(self.current_context, command[0]):

@@ -28,7 +28,7 @@ public static def GetUnattendedInstallFiles() as void:
         print "\r\n=== Unattended Install Files ===\r\n"
 
         windir as string = System.Environment.GetEnvironmentVariable("windir")
-        SearchLocations as List = [
+        SearchLocations = [
             String.Format("{0}\\sysprep\\sysprep.xml", windir),
             String.Format("{0}\\sysprep\\sysprep.inf", windir),
             String.Format("{0}\\sysprep.inf", windir),

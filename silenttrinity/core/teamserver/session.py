@@ -24,6 +24,7 @@ class Session:
         self.checkin_time = None
         self.crypto = ECDHE(psk=psk)
         self.jobs = Jobs(self)
+        self.first_checkin = time()
 
         self.logger = logging.getLogger(f"session:{str(self._guid)}")
         self.logger.propagate = False
@@ -105,6 +106,7 @@ class Session:
         yield ('address', self.address)
         yield ('info', self.info)
         yield ('lastcheckin', self.last_check_in())
+        yield ('firstcheckin', self.first_checkin)
 
     def __eq__(self, other):
         if type(other) == uuid.UUID:

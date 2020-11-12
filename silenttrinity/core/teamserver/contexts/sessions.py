@@ -45,6 +45,7 @@ class Sessions:
         with STDatabase() as db:
             for registered_session in db.get_sessions():
                 _, guid, psk = registered_session
+                logging.info(f'{_}, {guid}, {psk}')
                 self._register(guid, psk)
 
     def get_session(self, guid, attempt_auto_reg=True):

@@ -385,7 +385,7 @@ class STJob:
         return "Sent File"
 
     public def CompileAndRun(source as string, references) as string:
-        #print("Received source: \n $source")
+        print("Received source: \n $source")
         parameters = CompilerParameters(false)
         parameters.Input.Add( StringInput("$(id).boo", source) )
         parameters.Pipeline = CompileToMemory()
@@ -404,7 +404,11 @@ class STJob:
             parameters.AddAssembly(Assembly.LoadWithPartialName(r))
 
         compiler = BooCompiler(parameters)
-        context = compiler.Run()
+        try:
+            context = compiler.Run()
+        except e as Exception:
+            print "failed in compiler runnnn"
+            print e
 
         if context.GeneratedAssembly is null:
             error = true
@@ -429,7 +433,8 @@ class STJob:
                     #Call the Main function in the compiled assembly if available else call Start
                     try:
                         module.Main()
-                    except MissingMethodException:
+                    except e as MissingMethodException:
+                        print "failed in module.Main" + e
                         module.Start(self)
 
                     scriptOutput.Flush()
